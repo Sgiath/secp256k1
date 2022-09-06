@@ -3,6 +3,7 @@ defmodule Secp256k1 do
 
   require Logger
 
+  @spec gen_seckey :: binary()
   def gen_seckey do
     32
     |> :crypto.strong_rand_bytes()

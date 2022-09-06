@@ -8,7 +8,10 @@ defmodule Secp256k1.Schnorr do
   @on_load :load_nifs
 
   def load_nifs do
-    :erlang.load_nif('./priv/nif', 0)
+    :secp256k1
+    |> Application.app_dir("priv/nif")
+    |> String.to_charlist()
+    |> :erlang.load_nif(0)
   end
 
   @spec xonly_pubkey(seckey()) :: {:ok, pubkey()} | {:error, String.t()}
