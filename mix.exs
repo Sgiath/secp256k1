@@ -7,8 +7,11 @@ defmodule Secp256k1.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
+      deps: deps(),
+
+      # Elixir make
       compilers: [:elixir_make] ++ Mix.compilers(),
-      deps: deps()
+      make_clean: ["clean"]
     ]
   end
 

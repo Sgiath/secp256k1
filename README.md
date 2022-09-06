@@ -1,21 +1,15 @@
 # Secp256k1
 
-**TODO: Add description**
+Elixir bindings for [secp256k1](https://github.com/bitcoin-core/secp256k1) library
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `secp256k1` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `secp256k1` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:secp256k1, "~> 0.1.0"}
+    {:secp256k1, git: "https://git.sr.ht/~sgiath/secp256k1"}
   ]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/secp256k1>.
-
