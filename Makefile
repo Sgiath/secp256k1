@@ -1,38 +1,60 @@
 # C library source
 LIB_URL = https://github.com/bitcoin-core/secp256k1
 COMMIT_HASH = 694ce8fb2d1fd8a3d641d7c33705691d41a2a860
-SRC_DIR = c_src/secp256k1
+
+# directories
+TARGET_DIR := ./priv
+SRC_DIR := ./c_src
+LIB_SRC_DIR = $(SRC_DIR)/secp256k1
 
 # Erlang headers
 CFLAGS += -I$(ERTS_INCLUDE_DIR)
 
 # secp256k1 libraries
-CFLAGS += -I $(SRC_DIR)/include
+CFLAGS += -I $(LIB_SRC_DIR)/include
 CFLAGS += -fPIC
 
 # LD
-LDFLAGS += $(SRC_DIR)/.libs/libsecp256k1.a -lgmp
+LDFLAGS += -lgmp
 
 CONFIG_OPTS = --enable-module-extrakeys --enable-module-schnorrsig --disable-benchmark --disable-tests --disable-fast-install --with-pic
 
-priv/nif.so: c_src/nif.c c_src/random.h c_src/utils.h $(SRC_DIR)/.libs/libsecp256k1.a
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -shared -o $@ c_src/random.h c_src/utils.h c_src/nif.c $(LDFLAGS)
+# utils
+UTILS = $(SRC_DIR)/random.h $(SRC_DIR)/utils.h
 
-$(SRC_DIR)/.libs/libsecp256k1.a: $(SRC_DIR)/Makefile
-	$(MAKE) -C $(SRC_DIR)
+# default target
 
-$(SRC_DIR)/Makefile: $(SRC_DIR)/configure
-	cd $(SRC_DIR) && ./configure $(CONFIG_OPTS)
+.PHONY: all
+all: $(TARGET_DIR)/extrakeys.so $(TARGET_DIR)/schnorrsig.so
 
-$(SRC_DIR)/configure: $(SRC_DIR)/autogen.sh
-	cd $(SRC_DIR) && ./autogen.sh
+# NIFs compilation
 
-$(SRC_DIR)/autogen.sh:
-	@rm -rf $(SRC_DIR)
-	git clone $(LIB_URL) $(SRC_DIR)
-	cd $(SRC_DIR) && git checkout $(COMMIT_HASH)
+$(TARGET_DIR)/%.so: $(SRC_DIR)/%.c $(UTILS) $(LIB_SRC_DIR)/.libs/libsecp256k1.a
+	-mkdir -p $(@D)
+	$(CC) $(CFLAGS) -shared -o $@ $^ $(LDFLAGS)
 
+# secp256k1 library compilation
+
+$(LIB_SRC_DIR)/.libs/libsecp256k1.a: $(LIB_SRC_DIR)/Makefile
+	$(MAKE) -C $(LIB_SRC_DIR)
+
+$(LIB_SRC_DIR)/Makefile: $(LIB_SRC_DIR)/configure
+	cd $(LIB_SRC_DIR) && ./configure $(CONFIG_OPTS)
+
+$(LIB_SRC_DIR)/configure: $(LIB_SRC_DIR)/autogen.sh
+	cd $(LIB_SRC_DIR) && ./autogen.sh
+
+$(LIB_SRC_DIR)/autogen.sh:
+	-rm -rf $(LIB_SRC_DIR)
+	git clone $(LIB_URL) $(LIB_SRC_DIR)
+	cd $(LIB_SRC_DIR) && git checkout $(COMMIT_HASH)
+
+# cleaning
+
+.PHONY: clean-all
+clean-all: clean
+	-rm -rf $(LIB_SRC_DIR)
+
+.PHONY: clean
 clean:
-	$(MAKE) clean -C $(SRC_DIR)
-	@rm -f priv/nif.so
+	-rm -rf $(TARGET_DIR)
