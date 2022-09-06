@@ -3,72 +3,26 @@ defmodule Secp256k1 do
 
   require Logger
 
-  @spec gen_seckey :: binary()
-  def gen_seckey do
-    32
-    |> :crypto.strong_rand_bytes()
-    |> Base.encode16(case: :lower)
+  @type seckey() :: <<_::32, _::_*8>>
+  @type pubkey() :: <<_::32, _::_*8>>
+  @type signature() :: <<_::64, _::_*8>>
+
+  @spec gen_seckey :: seckey()
+  def gen_seckey, do: :crypto.strong_rand_bytes(32)
+
+  @spec pubkey(seckey :: seckey()) :: {:ok, pubkey()} | {:error, String.t()}
+  defdelegate pubkey(seckey), to: Secp256k1.Schnorr, as: :xonly_pubkey
+
+  @spec sign(message :: binary(), seckey :: seckey()) :: {:ok, signature()} | {:error, String.t()}
+  def sign(message, seckey) when byte_size(message) == 32 do
+    Secp256k1.Schnorr.sign32(message, seckey)
   end
 
-  @spec pubkey(seckey :: binary()) :: binary() | :error
-  def pubkey(seckey) do
-    seckey = Base.decode16!(seckey, case: :lower)
-
-    unless byte_size(seckey) == 32 do
-      raise ArgumentError
-    end
-
-    case Secp256k1.Schnorr.xonly_pubkey(seckey) do
-      {:ok, pubkey} ->
-        Base.encode16(pubkey, case: :lower)
-
-      {:error, message} ->
-        Logger.error(message)
-        :error
-    end
-  end
-
-  @spec sign(message :: binary(), seckey :: binary()) :: binary() | :error
   def sign(message, seckey) do
-    message = Base.decode16!(message, case: :lower)
-    seckey = Base.decode16!(seckey, case: :lower)
-
-    unless byte_size(seckey) == 32 do
-      raise ArgumentError
-    end
-
-    sig =
-      if byte_size(message) == 32 do
-        Secp256k1.Schnorr.sign32(message, seckey)
-      else
-        Secp256k1.Schnorr.sign_custom(message, seckey)
-      end
-
-    case sig do
-      {:ok, sig} ->
-        Base.encode16(sig, case: :lower)
-
-      {:error, message} ->
-        Logger.error(message)
-        :error
-    end
+    Secp256k1.Schnorr.sign_custom(message, seckey)
   end
 
   @spec verify(signature :: binary(), message :: binary(), seckey :: binary()) ::
           :valid | :invalid
-  def verify(signature, message, seckey) do
-    signature = Base.decode16!(signature, case: :lower)
-    message = Base.decode16!(message, case: :lower)
-    seckey = Base.decode16!(seckey, case: :lower)
-
-    unless byte_size(signature) == 64 do
-      raise ArgumentError
-    end
-
-    unless byte_size(seckey) == 32 do
-      raise ArgumentError
-    end
-
-    Secp256k1.Schnorr.verify(signature, message, seckey)
-  end
+  defdelegate verify(signature, message, seckey), to: Secp256k1.Schnorr
 end
