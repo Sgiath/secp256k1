@@ -10,17 +10,14 @@ defmodule Secp256k1 do
   @spec gen_seckey :: seckey()
   def gen_seckey, do: :crypto.strong_rand_bytes(32)
 
+  @spec mine_seckey(prefix :: <<_::_*8>>) :: {:ok, seckey()}
+  defdelegate mine_seckey(prefix), to: Secp256k1.Extrakeys
+
   @spec pubkey(seckey :: seckey()) :: {:ok, pubkey()} | {:error, String.t()}
   defdelegate pubkey(seckey), to: Secp256k1.Extrakeys, as: :xonly_pubkey
 
   @spec sign(message :: binary(), seckey :: seckey()) :: {:ok, signature()} | {:error, String.t()}
-  def sign(message, seckey) when byte_size(message) == 32 do
-    Secp256k1.Schnorr.sign32(message, seckey)
-  end
-
-  def sign(message, seckey) do
-    Secp256k1.Schnorr.sign_custom(message, seckey)
-  end
+  defdelegate sign(message, seckey), to: Secp256k1.Schnorr
 
   @spec verify(signature :: signature(), message :: binary(), pubkey :: pubkey()) ::
           :valid | :invalid

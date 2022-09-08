@@ -10,6 +10,11 @@ defmodule Secp256k1.Schnorr do
     |> :erlang.load_nif(0)
   end
 
+  @spec sign(message :: binary(), seckey :: Secp256k1.seckey()) ::
+          {:ok, Secp256k1.signature()} | {:error, String.t()}
+  def sign(message, seckey) when byte_size(message) == 32, do: sign32(message, seckey)
+  def sign(message, seckey), do: sign_custom(message, seckey)
+
   @spec sign32(message :: <<_::32, _::_*8>>, Secp256k1.seckey()) ::
           {:ok, Secp256k1.signature()} | {:error, String.t()}
   def sign32(_message, _seckey) do

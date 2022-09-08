@@ -14,4 +14,9 @@ defmodule Secp256k1.Extrakeys do
   def xonly_pubkey(_seckey) do
     exit(:nif_not_loaded)
   end
+
+  @spec mine_seckey(prefix :: <<_::_*8>>) :: {:ok, Secp256k1.seckey()}
+  def mine_seckey(_prefix) do
+    exit(:nif_not_loaded)
+  end
 end

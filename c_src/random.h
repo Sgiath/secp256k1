@@ -10,10 +10,6 @@
 #error "Couldn't identify the OS"
 #endif
 
-#include <stddef.h>
-#include <limits.h>
-#include <stdio.h>
-
 /* Returns 1 on success, and 0 on failure. */
 static int fill_random(unsigned char *data, size_t size)
 {
