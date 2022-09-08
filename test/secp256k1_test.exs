@@ -48,4 +48,19 @@ defmodule Secp256k1Test do
   test "does not validate invalid signature", %{pubkey: pubkey, signature: signature} do
     assert :invalid == Secp256k1.verify(signature, "hello", pubkey)
   end
+
+  test "encrypt / decrypt", %{seckey: sec1, pubkey: pub1} do
+    sec2 = Secp256k1.gen_seckey()
+    {:ok, pub2} = Secp256k1.pubkey(sec2)
+
+    shared1 = Secp256k1.shared_secret(sec1, pub2)
+    shared2 = Secp256k1.shared_secret(sec2, pub1)
+
+    assert shared1 == shared2
+
+    message = "hello"
+
+    {encrypted, iv} = Secp256k1.encrypt(message, shared1)
+    assert message == Secp256k1.decrypt(encrypted, shared2, iv)
+  end
 end

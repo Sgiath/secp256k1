@@ -22,4 +22,33 @@ defmodule Secp256k1 do
   @spec verify(signature :: signature(), message :: binary(), pubkey :: pubkey()) ::
           :valid | :invalid
   defdelegate verify(signature, message, pubkey), to: Secp256k1.Schnorr
+
+  @spec shared_secret(seckey :: seckey(), pubkey :: pubkey()) :: seckey()
+  def shared_secret(seckey, pubkey) do
+    :crypto.compute_key(:ecdh, <<0x02>> <> pubkey, seckey, :secp256k1)
+  end
+
+  @spec encrypt(binary(), shared_secret :: seckey()) ::
+          {encrypted :: binary(), iv :: <<_::16, _::_*8>>}
+  def encrypt(message, shared_secret) do
+    iv = :crypto.strong_rand_bytes(16)
+    {encrypt(message, shared_secret, iv), iv}
+  end
+
+  @spec encrypt(binary(), shared_secret :: seckey(), iv :: <<_::16, _::_*8>>) :: binary()
+  def encrypt(message, shared_secret, iv) do
+    :crypto.crypto_one_time(:aes_256_cbc, shared_secret, iv, message,
+      encrypt: true,
+      padding: :pkcs_padding
+    )
+  end
+
+  @spec decrypt(message :: binary(), shared_secret :: seckey(), iv :: <<_::16, _::_*8>>) ::
+          binary()
+  def decrypt(message, shared_secret, iv) do
+    :crypto.crypto_one_time(:aes_256_cbc, shared_secret, iv, message,
+      encrypt: false,
+      padding: :pkcs_padding
+    )
+  end
 end
