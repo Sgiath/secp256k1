@@ -24,7 +24,7 @@ xonly_pubkey(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   }
 
   // check arguments size
-  if (seckey.size != 32)
+  if (!(seckey.size == 32 && secp256k1_ec_seckey_verify(ctx, seckey.data)))
   {
     return enif_make_badarg(env);
   }

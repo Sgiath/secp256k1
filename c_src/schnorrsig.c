@@ -26,7 +26,12 @@ sign32(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   }
 
   /* check expected arguments size */
-  if (message.size != 32 || seckey.size != 32)
+  if (!(seckey.size == 32 && secp256k1_ec_seckey_verify(ctx, seckey.data)))
+  {
+    return enif_make_badarg(env);
+  }
+
+  if (message.size != 32)
   {
     return enif_make_badarg(env);
   }
@@ -79,7 +84,7 @@ sign_custom(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   }
 
   /* check expected arguments size */
-  if (seckey.size != 32)
+  if (!(seckey.size == 32 && secp256k1_ec_seckey_verify(ctx, seckey.data)))
   {
     return enif_make_badarg(env);
   }
