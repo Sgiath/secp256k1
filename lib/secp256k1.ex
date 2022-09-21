@@ -3,6 +3,8 @@ defmodule Secp256k1 do
 
   require Logger
 
+  @dialyzer {:no_return, mine_seckey: 1, pubkey: 1, sign: 2, verify: 3}
+
   @type seckey() :: <<_::32, _::_*8>>
   @type pubkey() :: <<_::32, _::_*8>>
   @type signature() :: <<_::64, _::_*8>>

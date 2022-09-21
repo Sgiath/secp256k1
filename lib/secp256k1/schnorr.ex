@@ -3,6 +3,8 @@ defmodule Secp256k1.Schnorr do
 
   @on_load :load_nifs
 
+  @dialyzer {:no_return, sign: 2}
+
   def load_nifs do
     :secp256k1
     |> Application.app_dir("priv/schnorrsig")
