@@ -17,7 +17,7 @@ CFLAGS += -fPIC
 # LD
 LDFLAGS += -lgmp
 
-CONFIG_OPTS = --enable-module-extrakeys --enable-module-schnorrsig --disable-benchmark --disable-tests --disable-fast-install --with-pic
+CONFIG_OPTS = --enable-module-ecdh --enable-module-extrakeys --enable-module-schnorrsig --disable-benchmark --disable-tests --disable-fast-install --with-pic
 
 # utils
 UTILS = $(SRC_DIR)/random.h $(SRC_DIR)/utils.h
@@ -25,7 +25,7 @@ UTILS = $(SRC_DIR)/random.h $(SRC_DIR)/utils.h
 # default target
 
 .PHONY: all
-all: $(TARGET_DIR)/ec.so $(TARGET_DIR)/extrakeys.so $(TARGET_DIR)/schnorrsig.so
+all: $(TARGET_DIR)/ec.so $(TARGET_DIR)/ecdh.so $(TARGET_DIR)/extrakeys.so $(TARGET_DIR)/schnorrsig.so
 
 # NIFs compilation
 
@@ -51,10 +51,7 @@ $(LIB_SRC_DIR)/autogen.sh:
 
 # cleaning
 
-.PHONY: clean-all
-clean-all: clean
-	-rm -rf $(LIB_SRC_DIR)
-
 .PHONY: clean
 clean:
 	-rm -rf $(TARGET_DIR)
+	-rm -rf $(LIB_SRC_DIR)
