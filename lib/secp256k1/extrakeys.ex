@@ -3,6 +3,8 @@ defmodule Secp256k1.Extrakeys do
 
   @on_load :load_nifs
 
+  @dialyzer {:no_return, xonly_pubkey: 1, mine_seckey: 1}
+
   def load_nifs do
     :secp256k1
     |> Application.app_dir("priv/extrakeys")
