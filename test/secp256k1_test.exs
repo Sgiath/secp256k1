@@ -21,12 +21,14 @@ defmodule Secp256k1Test do
   end
 
   test "generate seckey" do
-    seckey = Secp256k1.gen_seckey()
+    {seckey, pubkey} = Secp256k1.keypair(:xonly)
+
     assert byte_size(seckey) == 32
+    assert byte_size(pubkey) == 32
   end
 
   test "correctly derive pubkey", %{seckey: seckey, pubkey: pubkey} do
-    assert {:ok, ^pubkey} = Secp256k1.pubkey(seckey)
+    assert pubkey == Secp256k1.pubkey(seckey, :xonly)
   end
 
   test "correctly validate signature", %{pubkey: pubkey, message: message, signature: signature} do
@@ -34,14 +36,14 @@ defmodule Secp256k1Test do
   end
 
   test "generate and validate sign32", %{seckey: seckey, pubkey: pubkey, message: message} do
-    assert {:ok, signature} = Secp256k1.sign(message, seckey)
+    signature = Secp256k1.sign(message, seckey)
     assert :valid == Secp256k1.verify(signature, message, pubkey)
   end
 
   test "generate and validate sign_custom", %{seckey: seckey, pubkey: pubkey} do
     message = "hello"
 
-    assert {:ok, signature} = Secp256k1.sign(message, seckey)
+    signature = Secp256k1.sign(message, seckey)
     assert :valid == Secp256k1.verify(signature, message, pubkey)
   end
 
@@ -50,17 +52,8 @@ defmodule Secp256k1Test do
   end
 
   test "encrypt / decrypt", %{seckey: sec1, pubkey: pub1} do
-    sec2 = Secp256k1.gen_seckey()
-    {:ok, pub2} = Secp256k1.pubkey(sec2)
+    {sec2, pub2} = Secp256k1.keypair(:compressed)
 
-    shared1 = Secp256k1.shared_secret(sec1, pub2)
-    shared2 = Secp256k1.shared_secret(sec2, pub1)
-
-    assert shared1 == shared2
-
-    message = "hello"
-
-    {encrypted, iv} = Secp256k1.encrypt(message, shared1)
-    assert message == Secp256k1.decrypt(encrypted, shared2, iv)
+    assert Secp256k1.ecdh(sec1, pub2) == Secp256k1.ecdh(sec2, <<0x02::8, pub1::binary>>)
   end
 end
