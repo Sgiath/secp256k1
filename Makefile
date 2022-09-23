@@ -30,28 +30,28 @@ all: $(TARGET_DIR)/ec.so $(TARGET_DIR)/ecdh.so $(TARGET_DIR)/extrakeys.so $(TARG
 # NIFs compilation
 
 $(TARGET_DIR)/%.so: $(SRC_DIR)/%.c $(UTILS) $(LIB_SRC_DIR)/.libs/libsecp256k1.a
-	-mkdir -p $(@D)
-	$(CC) $(CFLAGS) -shared -o $@ $^ $(LDFLAGS)
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -shared -o $@ $^ $(LDFLAGS)
 
 # secp256k1 library compilation
 
 $(LIB_SRC_DIR)/.libs/libsecp256k1.a: $(LIB_SRC_DIR)/Makefile
-	$(MAKE) -C $(LIB_SRC_DIR)
+	@$(MAKE) -C $(LIB_SRC_DIR)
 
 $(LIB_SRC_DIR)/Makefile: $(LIB_SRC_DIR)/configure
-	cd $(LIB_SRC_DIR) && ./configure $(CONFIG_OPTS)
+	@cd $(LIB_SRC_DIR) && ./configure $(CONFIG_OPTS)
 
 $(LIB_SRC_DIR)/configure: $(LIB_SRC_DIR)/autogen.sh
-	cd $(LIB_SRC_DIR) && ./autogen.sh
+	@cd $(LIB_SRC_DIR) && ./autogen.sh
 
 $(LIB_SRC_DIR)/autogen.sh:
-	-rm -rf $(LIB_SRC_DIR)
-	git clone $(LIB_URL) $(LIB_SRC_DIR)
-	cd $(LIB_SRC_DIR) && git checkout $(COMMIT_HASH)
+	@rm -rf $(LIB_SRC_DIR)
+	@git clone $(LIB_URL) $(LIB_SRC_DIR)
+	@cd $(LIB_SRC_DIR) && git checkout $(COMMIT_HASH)
 
 # cleaning
 
 .PHONY: clean
 clean:
-	-rm -rf $(TARGET_DIR)
-	-rm -rf $(LIB_SRC_DIR)
+	@rm -rf $(TARGET_DIR)
+	@rm -rf $(LIB_SRC_DIR)

@@ -60,7 +60,7 @@ sign32(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert signature to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(signature), &result);
   memcpy(finished, signature, sizeof(signature));
-  return ok_result(env, &result);
+  return result;
 }
 
 static ERL_NIF_TERM
@@ -116,7 +116,7 @@ sign_custom(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert signature to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(signature), &result);
   memcpy(finished, signature, sizeof(signature));
-  return ok_result(env, &result);
+  return result;
 }
 
 static ERL_NIF_TERM

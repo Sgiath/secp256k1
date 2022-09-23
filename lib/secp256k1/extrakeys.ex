@@ -3,7 +3,7 @@ defmodule Secp256k1.Extrakeys do
 
   @on_load :load_nifs
 
-  @dialyzer {:no_return, xonly_pubkey: 1, mine_seckey: 1}
+  @dialyzer {:no_return, xonly_pubkey: 1}
 
   def load_nifs do
     :secp256k1
@@ -12,13 +12,8 @@ defmodule Secp256k1.Extrakeys do
     |> :erlang.load_nif(0)
   end
 
-  @spec xonly_pubkey(Secp256k1.seckey()) :: {:ok, Secp256k1.pubkey()} | {:error, String.t()}
+  @spec xonly_pubkey(Secp256k1.seckey()) :: Secp256k1.pubkey() | {:error, String.t()}
   def xonly_pubkey(_seckey) do
-    exit(:nif_not_loaded)
-  end
-
-  @spec mine_seckey(prefix :: <<_::_*8>>) :: {:ok, Secp256k1.seckey()}
-  def mine_seckey(_prefix) do
     exit(:nif_not_loaded)
   end
 end

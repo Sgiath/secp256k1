@@ -40,7 +40,7 @@ compressed_pubkey(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert serialized pubkey to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(serialized_pubkey), &result);
   memcpy(finished, serialized_pubkey, sizeof(serialized_pubkey));
-  return ok_result(env, &result);
+  return result;
 }
 
 static ERL_NIF_TERM
@@ -81,7 +81,7 @@ uncompressed_pubkey(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert serialized pubkey to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(serialized_pubkey), &result);
   memcpy(finished, serialized_pubkey, sizeof(serialized_pubkey));
-  return ok_result(env, &result);
+  return result;
 }
 
 static ERL_NIF_TERM
@@ -122,7 +122,7 @@ compress_pubkey(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert serialized pubkey to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(serialized_pubkey), &result);
   memcpy(finished, serialized_pubkey, sizeof(serialized_pubkey));
-  return ok_result(env, &result);
+  return result;
 }
 
 static ERL_NIF_TERM
@@ -163,7 +163,7 @@ decompress_pubkey(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert serialized pubkey to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(serialized_pubkey), &result);
   memcpy(finished, serialized_pubkey, sizeof(serialized_pubkey));
-  return ok_result(env, &result);
+  return result;
 }
 
 static ErlNifFunc nif_funcs[] = {

@@ -13,18 +13,18 @@ defmodule Secp256k1.Schnorr do
   end
 
   @spec sign(message :: binary(), seckey :: Secp256k1.seckey()) ::
-          {:ok, Secp256k1.signature()} | {:error, String.t()}
+          Secp256k1.signature() | {:error, String.t()}
   def sign(message, seckey) when byte_size(message) == 32, do: sign32(message, seckey)
   def sign(message, seckey), do: sign_custom(message, seckey)
 
   @spec sign32(message :: <<_::32, _::_*8>>, Secp256k1.seckey()) ::
-          {:ok, Secp256k1.signature()} | {:error, String.t()}
+          Secp256k1.signature() | {:error, String.t()}
   def sign32(_message, _seckey) do
     exit(:nif_not_loaded)
   end
 
   @spec sign_custom(message :: binary(), Secp256k1.seckey()) ::
-          {:ok, Secp256k1.signature()} | {:error, String.t()}
+          Secp256k1.signature() | {:error, String.t()}
   def sign_custom(_message, _seckey) do
     exit(:nif_not_loaded)
   end

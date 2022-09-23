@@ -21,25 +21,25 @@ defmodule Secp256k1.EC do
   end
 
   @spec compressed_pubkey(seckey :: Secp256k1.seckey()) ::
-          {:ok, Secp256k1.compressed_pubkey()} | {:error, String.t()}
+          Secp256k1.compressed_pubkey() | {:error, String.t()}
   def compressed_pubkey(_seckey) do
     exit(:nif_not_loaded)
   end
 
   @spec uncompressed_pubkey(seckey :: Secp256k1.seckey()) ::
-          {:ok, Secp256k1.uncompressed_pubkey()} | {:error, String.t()}
+          Secp256k1.uncompressed_pubkey() | {:error, String.t()}
   def uncompressed_pubkey(_seckey) do
     exit(:nif_not_loaded)
   end
 
   @spec compress_pubkey(pubkey :: Secp256k1.uncompressed_pubkey()) ::
-          {:ok, Secp256k1.compressed_pubkey()} | {:error, String.t()}
+          Secp256k1.compressed_pubkey() | {:error, String.t()}
   def compress_pubkey(_pubkey) do
     exit(:nif_not_loaded)
   end
 
   @spec decompress_pubkey(pubkey :: Secp256k1.compressed_pubkey()) ::
-          {:ok, Secp256k1.uncompressed_pubkey()} | {:error, String.t()}
+          Secp256k1.uncompressed_pubkey() | {:error, String.t()}
   def decompress_pubkey(_pubkey) do
     exit(:nif_not_loaded)
   end

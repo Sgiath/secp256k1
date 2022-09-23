@@ -11,7 +11,7 @@ defmodule Secp256k1.ECDH do
   end
 
   @spec ecdh(seckey :: Secp256k1.seckey(), pubkey :: Secp256k1.compressed_pubkey()) ::
-          {:ok, <<_::32, _::_*8>>} | {:error, String.t()}
+          <<_::32, _::_*8>> | {:error, String.t()}
   def ecdh(_seckey, _pubkey) do
     exit(:nif_not_loaded)
   end
