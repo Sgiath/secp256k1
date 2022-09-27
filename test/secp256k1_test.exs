@@ -32,28 +32,28 @@ defmodule Secp256k1Test do
   end
 
   test "correctly validate signature", %{pubkey: pubkey, message: message, signature: signature} do
-    assert :valid = Secp256k1.verify(signature, message, pubkey)
+    assert Secp256k1.schnorr_valid?(signature, message, pubkey)
   end
 
   test "generate and validate sign32", %{seckey: seckey, pubkey: pubkey, message: message} do
-    signature = Secp256k1.sign(message, seckey)
-    assert :valid == Secp256k1.verify(signature, message, pubkey)
+    signature = Secp256k1.schnorr_sign(message, seckey)
+    assert Secp256k1.schnorr_valid?(signature, message, pubkey)
   end
 
   test "generate and validate sign_custom", %{seckey: seckey, pubkey: pubkey} do
     message = "hello"
 
-    signature = Secp256k1.sign(message, seckey)
-    assert :valid == Secp256k1.verify(signature, message, pubkey)
+    signature = Secp256k1.schnorr_sign(message, seckey)
+    assert Secp256k1.schnorr_valid?(signature, message, pubkey)
   end
 
   test "does not validate invalid signature", %{pubkey: pubkey, signature: signature} do
-    assert :invalid == Secp256k1.verify(signature, "hello", pubkey)
+    refute Secp256k1.schnorr_valid?(signature, "hello", pubkey)
   end
 
   test "encrypt / decrypt", %{seckey: sec1, pubkey: pub1} do
     {sec2, pub2} = Secp256k1.keypair(:compressed)
 
-    assert Secp256k1.ecdh(sec1, pub2) == Secp256k1.ecdh(sec2, <<0x02::8, pub1::binary>>)
+    assert Secp256k1.ecdh(sec1, pub2) == Secp256k1.ecdh(sec2, <<0x02, pub1::binary>>)
   end
 end

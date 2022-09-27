@@ -3,7 +3,8 @@ defmodule Secp256k1 do
 
   require Logger
 
-  @dialyzer {:no_return, pubkey: 2, sign: 2, verify: 3, ecdh: 2, keypair: 1, keypair: 2}
+  @dialyzer {:no_return,
+             pubkey: 2, schnorr_sign: 2, schnorr_valid?: 3, ecdh: 2, keypair: 1, keypair: 2}
 
   @type seckey() :: <<_::32, _::_*8>>
 
@@ -39,16 +40,15 @@ defmodule Secp256k1 do
 
   # Schnorr sign
 
-  @spec sign(message :: binary(), seckey :: seckey()) :: schnorr_sig()
-  defdelegate sign(message, seckey), to: Secp256k1.Schnorr
+  @spec schnorr_sign(message :: binary(), seckey :: seckey()) :: schnorr_sig()
+  defdelegate schnorr_sign(message, seckey), to: Secp256k1.Schnorr, as: :sign
 
-  @spec verify(
+  @spec schnorr_valid?(
           signature :: schnorr_sig(),
           message :: binary(),
           pubkey :: Secp256k1.Extrakeys.xonly()
-        ) ::
-          :valid | :invalid
-  defdelegate verify(signature, message, pubkey), to: Secp256k1.Schnorr
+        ) :: boolean()
+  defdelegate schnorr_valid?(signature, message, pubkey), to: Secp256k1.Schnorr, as: :valid?
 
   # ECDH
 

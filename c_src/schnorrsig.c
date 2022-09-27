@@ -147,16 +147,16 @@ verify(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
 
   if (secp256k1_schnorrsig_verify(ctx, signature.data, message.data, message.size, &xonly_pubkey))
   {
-    return enif_make_atom(env, "valid");
+    return enif_make_atom(env, "true");
   }
 
-  return enif_make_atom(env, "invalid");
+  return enif_make_atom(env, "false");
 }
 
 static ErlNifFunc nif_funcs[] = {
     {"sign32", 2, sign32},
     {"sign_custom", 2, sign_custom},
-    {"verify", 3, verify},
+    {"valid?", 3, verify},
 };
 
 ERL_NIF_INIT(Elixir.Secp256k1.Schnorr, nif_funcs, &load, NULL, &upgrade, &unload)
