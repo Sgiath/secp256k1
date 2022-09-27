@@ -1,57 +1,180 @@
 defmodule Secp256k1 do
-  @moduledoc false
+  @moduledoc ~S"""
+  This is unified API for all secp256k1 functions this library provides
+
+  ## Examples
+
+  ### Generate new keypair
+
+      iex> {_seckey, pubkey} = Secp256k1.keypair(:xonly)
+
+  ### Derive pubkey from your awesome seckey
+
+      iex> seckey = <<0x1111111111111111111111111111111111111111111111111111111111111111::256>>
+      iex> pubkey = Secp256k1.pubkey(seckey, :compressed)
+      iex> Base.encode16(pubkey, case: :lower)
+      "034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa"
+
+  ### Calculate Schnorr signature
+
+      iex> # your keypair
+      iex> {seckey, pubkey} = Secp256k1.keypair(:xonly)
+      iex> # prepare your message hash
+      iex> msg_hash = :crypto.hash(:sha256, "My awesome message")
+      iex> # generate signature
+      iex> sig = Secp256k1.schnorr_sign(msg_hash, seckey)
+      iex> # validate your signature
+      iex> Secp256k1.schnorr_valid?(sig, msg_hash, pubkey)
+      true
+
+  ### Calculate Diffie-Hellman secret
+
+      iex> {s1, p1} = Secp256k1.keypair(:compressed)
+      iex> {s2, p2} = Secp256k1.keypair(:compressed)
+      iex> ecdh1 = Secp256k1.ecdh(s1, p2)
+      iex> ecdh2 = Secp256k1.ecdh(s2, p1)
+      iex> ecdh1 == ecdh2
+      true
+
+  """
+  @moduledoc authors: ["sgiath <secp256k1@sgiath.dev>"]
+
+  import Secp256k1.Guards
 
   require Logger
 
   @dialyzer {:no_return,
              pubkey: 2, schnorr_sign: 2, schnorr_valid?: 3, ecdh: 2, keypair: 1, keypair: 2}
 
+  @typedoc "EC secp256k1 seckey is 32 bytes long binary"
   @type seckey() :: <<_::32, _::_*8>>
 
+  @typedoc """
+  Pubkey can be parsed in compressed (33 bytes), uncompressed (65 bytes) or xonly (32 bytes) format
+  """
   @type pubkey_type() :: :compressed | :uncompressed | :xonly
-  @type pubkey() :: Secp256k1.EC.pubkey() | Secp256k1.Extrakeys.xonly()
 
-  @type schnorr_sig() :: Secp256k1.Schnorr.signature()
+  @typedoc """
+  X-only pubkey is binary of 32 byte length
+  """
+  @type xonly_pubkey() :: <<_::32, _::_*8>>
 
-  # pubkey
+  @typedoc """
+  Compressed pubkey is binary of 33 byte length
+  """
+  @type compressed_pubkey() :: <<_::33, _::_*8>>
 
+  @typedoc """
+  Uncompressed pubkey is binary of 65 byte length
+  """
+  @type uncompressed_pubkey() :: <<_::65, _::_*8>>
+
+  @typedoc """
+  Pubkey is binary of 32, 33 or 65 byte length
+  """
+  @type pubkey() :: xonly_pubkey() | compressed_pubkey() | uncompressed_pubkey()
+
+  @typedoc """
+  Schnorr signature is 64 bytes long binary
+  """
+  @type schnorr_sig() :: <<_::64, _::_*8>>
+
+  @typedoc "ECDH shared secret is 32 bytes long binary"
+  @type shared_secret() :: <<_::32, _::_*8>>
+
+  @doc """
+  Derive pubkey from provided seckey
+
+  Inputs
+    - `seckey` 32 byte long binary
+    - `type` one of `:xonly`, `:compressed` or `:uncompressed`
+
+  Output
+    - `pubkey` serialization type depends on the type provided
+
+  """
   @spec pubkey(seckey :: seckey(), type :: pubkey_type()) :: pubkey()
-  def pubkey(seckey, :xonly) do
+  def pubkey(seckey, :xonly) when is_seckey(seckey) do
     Secp256k1.Extrakeys.xonly_pubkey(seckey)
   end
 
-  def pubkey(seckey, :compressed) do
+  def pubkey(seckey, :compressed) when is_seckey(seckey) do
     Secp256k1.EC.pubkey(seckey, compress: true)
   end
 
-  def pubkey(seckey, :uncompressed) do
+  def pubkey(seckey, :uncompressed) when is_seckey(seckey) do
     Secp256k1.EC.pubkey(seckey, compress: false)
   end
 
+  @doc """
+  Generate new secp256k1 keypair
+
+  Input
+    - `type` (see `pubkey/2`)
+
+  Output
+    - 2-tuple with seckey on the first place and pubkey on the second place
+
+  """
   @spec keypair(type :: pubkey_type()) :: {seckey(), pubkey()}
-  def keypair(type) do
+  def keypair(type) when type in [:xonly, :compressed, :uncompressed] do
     keypair(:crypto.strong_rand_bytes(32), type)
   end
 
+  @doc """
+  Generate new secp256k1 keypair from provided seckey
+
+  For options see `pubkey/2`
+  """
   @spec keypair(seckey :: seckey(), type :: pubkey_type()) :: {seckey(), pubkey()}
-  def keypair(seckey, type) do
+  def keypair(seckey, type)
+      when is_seckey(seckey) and type in [:xonly, :compressed, :uncompressed] do
     {seckey, Secp256k1.pubkey(seckey, type)}
   end
 
-  # Schnorr sign
+  @doc """
+  Calculate Schnorr signature according to BIP 340
 
+  Inputs
+    - `message` can accept arbitrary long binary but only 32 byte long hash is the only option
+      strictly according to specification
+    - `seckey` 32 byte long binary
+
+  Output
+    - `signature` Schnorr signature is 64 byte long binary
+
+  _Note:_ automatic random nonce is added to every run so generated signature is not deterministic
+
+  """
   @spec schnorr_sign(message :: binary(), seckey :: seckey()) :: schnorr_sig()
   defdelegate schnorr_sign(message, seckey), to: Secp256k1.Schnorr, as: :sign
 
+  @doc """
+  Validate Schnorr signature
+
+  Inputs
+    - `signature` 64 byte long binary
+    - `message` arbitrary long binary
+    - `pubkey` xonly pubkey (32 byte long binary)
+  """
   @spec schnorr_valid?(
           signature :: schnorr_sig(),
           message :: binary(),
-          pubkey :: Secp256k1.Extrakeys.xonly()
+          pubkey :: xonly_pubkey()
         ) :: boolean()
   defdelegate schnorr_valid?(signature, message, pubkey), to: Secp256k1.Schnorr, as: :valid?
 
-  # ECDH
+  @doc """
+  Calculate an EC Diffie-Hellman secret in constant time
 
-  @spec ecdh(seckey :: seckey(), pubkey :: pubkey()) :: Secp256k1.ECDH.shared_secret()
+  It accepts pubkey only in compressed or uncompressed format (not xonly format). If you need to
+  compute ECDH from xonly pubkey you can prepend it with 0x02 or 0x03 byte but keep in mind that
+  this needs to be consistent thour your app (e.g. if you need interoperability with other apps
+  that generate ECDH from full pubkey you don't want to do that):
+
+      ecdh(seckey, <<0x02, xonly_pubkey::binary>>)
+
+  """
+  @spec ecdh(seckey :: seckey(), pubkey :: compressed_pubkey()) :: shared_secret()
   defdelegate ecdh(seckey, pubkey), to: Secp256k1.ECDH
 end

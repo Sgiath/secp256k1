@@ -6,6 +6,7 @@ defmodule Secp256k1.MixProject do
       app: :secp256k1,
       version: "0.1.0",
       elixir: "~> 1.14",
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
 
       # Elixir make
@@ -19,6 +20,7 @@ defmodule Secp256k1.MixProject do
       description: """
       Library wrapping around secp256k1 Bitcoin library
       """,
+      package: package(),
       docs: docs()
     ]
   end
@@ -29,6 +31,9 @@ defmodule Secp256k1.MixProject do
     ]
   end
 
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
   defp deps do
     [
       {:elixir_make, "~> 0.6", runtime: false},
@@ -38,35 +43,33 @@ defmodule Secp256k1.MixProject do
     ]
   end
 
-  defp docs do
+  defp package do
     [
-      authors: [
-        "Sgiath <sgiath@sgiath.dev>"
-      ],
-      main: "overview",
-      formatters: ["html"],
-      source_url_patter: "https://git.sr.ht/~sgiath/secp256k1/tree/master/item/%{path}#L%{line}",
-      extra_section: "Guides",
-      extras: extras(),
-      groups_for_extras: groups_for_extras(),
-      nest_modules_by_prefix: [
-        Spaceboy.Middleware
+      licenses: ["WTFPL"],
+      links: %{
+        "C library" => "https://github.com/bitcoin-core/secp256k1",
+        "Source Hut" => "https://git.sr.ht/~sgiath/secp256k1"
+      },
+      files: [
+        "lib",
+        "LICENSE",
+        "mix.exs",
+        "README.md",
+        "c_src/*.[ch]",
+        "Makefile"
       ]
     ]
   end
 
-  defp extras do
+  defp docs do
     [
-      # Introduction
-      "docs/introduction/overview.md",
-      "docs/introduction/installation.md"
-    ]
-  end
-
-  defp groups_for_extras do
-    [
-      Introduction: ~r/docs\/introduction\/.?/,
-      Guides: ~r/docs\/guides\/.?/
+      authors: [
+        "sgiath <secp256k1@sgiath.dev>"
+      ],
+      main: "readme",
+      extras: ["README.md": [filename: "readme", title: "Overview"]],
+      formatters: ["html"],
+      source_url_patter: "https://git.sr.ht/~sgiath/secp256k1/tree/master/item/%{path}#L%{line}"
     ]
   end
 end
