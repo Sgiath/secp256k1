@@ -13,3 +13,12 @@ def deps do
   ]
 end
 ```
+
+## Features
+
+- [x] generate secure random seckey
+- [x] derive pubkey and serialize it in compressed, uncompressed or xonly format
+- [x] generate and validate Schnorr signature
+- [x] compute Diffie-Hellman secret
+- [ ] standard EC signatures
+- [ ] key tweaking
