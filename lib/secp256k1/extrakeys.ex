@@ -12,7 +12,9 @@ defmodule Secp256k1.Extrakeys do
     |> :erlang.load_nif(0)
   end
 
-  @spec xonly_pubkey(Secp256k1.seckey()) :: Secp256k1.pubkey() | {:error, String.t()}
+  @type xonly() :: <<_::32, _::_*8>>
+
+  @spec xonly_pubkey(Secp256k1.seckey()) :: xonly()
   def xonly_pubkey(_seckey) do
     exit(:nif_not_loaded)
   end

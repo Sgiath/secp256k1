@@ -10,8 +10,9 @@ defmodule Secp256k1.ECDH do
     |> :erlang.load_nif(0)
   end
 
-  @spec ecdh(seckey :: Secp256k1.seckey(), pubkey :: Secp256k1.compressed_pubkey()) ::
-          <<_::32, _::_*8>> | {:error, String.t()}
+  @type shared_secret() :: <<_::32, _::_*8>>
+
+  @spec ecdh(seckey :: Secp256k1.seckey(), pubkey :: Secp256k1.EC.compressed()) :: shared_secret()
   def ecdh(_seckey, _pubkey) do
     exit(:nif_not_loaded)
   end
