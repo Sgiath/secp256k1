@@ -1,9 +1,9 @@
-defmodule Secp256k1Test.EC do
+defmodule Secp256k1Test.ECDSA do
   use Secp256k1Test.Case, async: true
 
-  alias Secp256k1.EC
+  alias Secp256k1.ECDSA
 
-  doctest Secp256k1.EC
+  doctest Secp256k1.ECDSA
 
   setup_all do
     {:ok,
@@ -18,14 +18,14 @@ defmodule Secp256k1Test.EC do
   end
 
   test "sucessful", %{seckey: seckey, pubkey_compressed: pc, pubkey_uncompressed: pu} do
-    assert EC.pubkey(seckey) == pc
-    assert EC.pubkey(seckey, compress: true) == pc
-    assert EC.pubkey(seckey, compress: false) == pu
+    assert ECDSA.pubkey(seckey) == pc
+    assert ECDSA.pubkey(seckey, compress: true) == pc
+    assert ECDSA.pubkey(seckey, compress: false) == pu
 
-    assert EC.compressed_pubkey(seckey) == pc
-    assert EC.uncompressed_pubkey(seckey) == pu
+    assert ECDSA.compressed_pubkey(seckey) == pc
+    assert ECDSA.uncompressed_pubkey(seckey) == pu
 
-    assert EC.compress_pubkey(pu) == pc
-    assert EC.decompress_pubkey(pc) == pu
+    assert ECDSA.compress_pubkey(pu) == pc
+    assert ECDSA.decompress_pubkey(pc) == pu
   end
 end

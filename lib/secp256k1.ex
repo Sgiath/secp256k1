@@ -6,7 +6,7 @@ defmodule Secp256k1 do
 
   ### Generate new keypair
 
-      iex> {_seckey, pubkey} = Secp256k1.keypair(:xonly)
+      iex> {_seckey, _pubkey} = Secp256k1.keypair(:xonly)
 
   ### Derive pubkey from your awesome seckey
 
@@ -14,6 +14,18 @@ defmodule Secp256k1 do
       iex> pubkey = Secp256k1.pubkey(seckey, :compressed)
       iex> Base.encode16(pubkey, case: :lower)
       "034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa"
+
+  ### Calculate ECDSA signature
+
+      iex> # your keypair
+      iex> {seckey, pubkey} = Secp256k1.keypair(:compressed)
+      iex> # prepare your message hash
+      iex> msg_hash = :crypto.hash(:sha256, "My awesome message")
+      iex> # generate signature
+      iex> sig = Secp256k1.ecdsa_sign(msg_hash, seckey)
+      iex> # validate your signature
+      iex> Secp256k1.ecdsa_valid?(sig, msg_hash, pubkey)
+      true
 
   ### Calculate Schnorr signature
 
@@ -44,9 +56,23 @@ defmodule Secp256k1 do
   require Logger
 
   @dialyzer {:no_return,
-             pubkey: 2, schnorr_sign: 2, schnorr_valid?: 3, ecdh: 2, keypair: 1, keypair: 2}
+             pubkey: 2,
+             schnorr_sign: 2,
+             schnorr_valid?: 3,
+             ecdh: 2,
+             keypair: 1,
+             keypair: 2,
+             ecdsa_sign: 2,
+             ecdsa_valid?: 3}
 
-  @typedoc "EC secp256k1 seckey is 32 bytes long binary"
+  @typedoc """
+  Hash is 32 bytes long binary
+  """
+  @type hash() :: <<_::32, _::_*8>>
+
+  @typedoc """
+  EC secp256k1 seckey is 32 bytes long binary
+  """
   @type seckey() :: <<_::32, _::_*8>>
 
   @typedoc """
@@ -75,6 +101,11 @@ defmodule Secp256k1 do
   @type pubkey() :: xonly_pubkey() | compressed_pubkey() | uncompressed_pubkey()
 
   @typedoc """
+  Serialized compressed ECDSA signature is 64 bytes long binary
+  """
+  @type ecdsa_sig() :: <<_::64, _::_*8>>
+
+  @typedoc """
   Schnorr signature is 64 bytes long binary
   """
   @type schnorr_sig() :: <<_::64, _::_*8>>
@@ -91,7 +122,6 @@ defmodule Secp256k1 do
 
   Output
     - `pubkey` serialization type depends on the type provided
-
   """
   @spec pubkey(seckey :: seckey(), type :: pubkey_type()) :: pubkey()
   def pubkey(seckey, :xonly) when is_seckey(seckey) do
@@ -99,11 +129,11 @@ defmodule Secp256k1 do
   end
 
   def pubkey(seckey, :compressed) when is_seckey(seckey) do
-    Secp256k1.EC.pubkey(seckey, compress: true)
+    Secp256k1.ECDSA.pubkey(seckey, compress: true)
   end
 
   def pubkey(seckey, :uncompressed) when is_seckey(seckey) do
-    Secp256k1.EC.pubkey(seckey, compress: false)
+    Secp256k1.ECDSA.pubkey(seckey, compress: false)
   end
 
   @doc """
@@ -114,7 +144,6 @@ defmodule Secp256k1 do
 
   Output
     - 2-tuple with seckey on the first place and pubkey on the second place
-
   """
   @spec keypair(type :: pubkey_type()) :: {seckey(), pubkey()}
   def keypair(type) when type in [:xonly, :compressed, :uncompressed] do
@@ -133,6 +162,31 @@ defmodule Secp256k1 do
   end
 
   @doc """
+  Create an ECDSA signature
+
+  Inputs
+    - `msg_hash` 32 byte long message hash to sign
+    - `seckey` 32 byte long binary
+
+  Output
+    - `signature` ECDSA signature serialized in commpressed format (64 byte binary)
+  """
+  @spec ecdsa_sign(msg_hash :: hash(), seckey :: seckey()) :: ecdsa_sig()
+  defdelegate ecdsa_sign(msg_hash, seckey), to: Secp256k1.ECDSA, as: :sign
+
+  @doc """
+  Validate ECDSA signature
+
+  Inputs
+    - `signature` 64 byte long binary
+    - `msg_hash` 32 byte long message hash to sign
+    - `pubkey` compressed pubkey (33 byte long binary)
+  """
+  @spec ecdsa_valid?(signature :: ecdsa_sig(), msg_hash :: hash(), pubkey :: compressed_pubkey()) ::
+          boolean()
+  defdelegate ecdsa_valid?(signature, msg_hash, pubkey), to: Secp256k1.ECDSA, as: :valid?
+
+  @doc """
   Calculate Schnorr signature according to BIP 340
 
   Inputs
@@ -144,7 +198,6 @@ defmodule Secp256k1 do
     - `signature` Schnorr signature is 64 byte long binary
 
   _Note:_ automatic random nonce is added to every run so generated signature is not deterministic
-
   """
   @spec schnorr_sign(message :: binary(), seckey :: seckey()) :: schnorr_sig()
   defdelegate schnorr_sign(message, seckey), to: Secp256k1.Schnorr, as: :sign
@@ -175,6 +228,7 @@ defmodule Secp256k1 do
       ecdh(seckey, <<0x02, xonly_pubkey::binary>>)
 
   """
-  @spec ecdh(seckey :: seckey(), pubkey :: compressed_pubkey()) :: shared_secret()
+  @spec ecdh(seckey :: seckey(), pubkey :: compressed_pubkey() | uncompressed_pubkey()) ::
+          shared_secret()
   defdelegate ecdh(seckey, pubkey), to: Secp256k1.ECDH
 end

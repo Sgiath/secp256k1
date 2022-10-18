@@ -25,7 +25,7 @@ UTILS = $(SRC_DIR)/random.h $(SRC_DIR)/utils.h
 # default target
 
 .PHONY: all
-all: $(TARGET_DIR)/ec.so $(TARGET_DIR)/ecdh.so $(TARGET_DIR)/extrakeys.so $(TARGET_DIR)/schnorrsig.so
+all: $(TARGET_DIR)/ecdsa.so $(TARGET_DIR)/ecdh.so $(TARGET_DIR)/extrakeys.so $(TARGET_DIR)/schnorrsig.so
 
 # NIFs compilation
 

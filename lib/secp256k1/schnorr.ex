@@ -4,36 +4,44 @@ defmodule Secp256k1.Schnorr do
   import Secp256k1.Guards
 
   @spec sign(message :: binary(), seckey :: Secp256k1.seckey()) :: Secp256k1.schnorr_sig()
-  def sign(message, seckey) when is_binary(message) and byte_size(message) == 32,
-    do: sign32(message, seckey)
+  def sign(message, seckey) when is_hash(message), do: sign32(message, seckey)
 
   def sign(message, seckey) when is_binary(message), do: sign_custom(message, seckey)
 
-  @spec sign32(message :: <<_::32, _::_*8>>, Secp256k1.seckey()) :: Secp256k1.schnorr_sig()
-  def sign32(_message, seckey) when is_seckey(seckey) do
-    exit(:nif_not_loaded)
+  @spec sign32(msg_hash :: Secp256k1.hash(), seckey :: Secp256k1.seckey()) ::
+          Secp256k1.schnorr_sig()
+  def sign32(msg_hash, seckey) when is_hash(msg_hash) and is_seckey(seckey) do
+    sign32(msg_hash, seckey, :crypto.strong_rand_bytes(32))
   end
 
-  @spec sign_custom(message :: binary(), Secp256k1.seckey()) :: Secp256k1.schnorr_sig()
-  def sign_custom(_message, seckey) when is_seckey(seckey) do
-    exit(:nif_not_loaded)
+  @spec sign32(
+          msg_hash :: Secp256k1.hash(),
+          seckey :: Secp256k1.seckey(),
+          aux :: <<_::32, _::_*8>>
+        ) :: Secp256k1.schnorr_sig()
+  def sign32(_msg_hash, _seckey, _aux), do: exit(:nif_not_loaded)
+
+  @spec sign_custom(message :: binary(), seckey :: Secp256k1.seckey()) :: Secp256k1.schnorr_sig()
+  def sign_custom(message, seckey) when is_seckey(seckey) do
+    sign_custom(message, seckey, :crypto.strong_rand_bytes(32))
   end
+
+  @spec sign_custom(message :: binary(), seckey :: Secp256k1.seckey(), aux :: <<_::32, _::_*8>>) ::
+          Secp256k1.schnorr_sig()
+  def sign_custom(_message, _seckey, _aux), do: exit(:nif_not_loaded)
 
   @spec valid?(
           signature :: Secp256k1.schnorr_sig(),
           message :: binary(),
           pubkey :: Secp256k1.xonly_pubkey()
         ) :: boolean()
-  def valid?(signature, message, pubkey)
-      when is_schnorr_sig(signature) and is_binary(message) and is_xonly_pubkey(pubkey) do
-    exit(:nif_not_loaded)
-  end
+  def valid?(_signature, _message, _pubkey), do: exit(:nif_not_loaded)
 
   # internal NIF related
 
   @on_load :load_nifs
 
-  @dialyzer {:no_return, sign: 2}
+  @dialyzer {:no_return, sign32: 2, sign_custom: 2, sign: 2}
 
   def load_nifs do
     :secp256k1

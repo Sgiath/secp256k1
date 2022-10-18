@@ -1,14 +1,9 @@
 defmodule Secp256k1.ECDH do
   @moduledoc false
 
-  import Secp256k1.Guards
-
   @spec ecdh(seckey :: Secp256k1.seckey(), pubkey :: Secp256k1.pubkey()) ::
           Secp256k1.shared_secret()
-  def ecdh(seckey, pubkey)
-      when is_seckey(seckey) and (is_compressed_pubkey(pubkey) or is_uncompressed_pubkey(pubkey)) do
-    exit(:nif_not_loaded)
-  end
+  def ecdh(_seckey, _pubkey), do: exit(:nif_not_loaded)
 
   # internal NIF related
 

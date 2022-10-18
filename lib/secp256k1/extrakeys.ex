@@ -1,12 +1,8 @@
 defmodule Secp256k1.Extrakeys do
   @moduledoc false
 
-  import Secp256k1.Guards
-
   @spec xonly_pubkey(Secp256k1.seckey()) :: Secp256k1.xonly_pubkey()
-  def xonly_pubkey(seckey) when is_seckey(seckey) do
-    exit(:nif_not_loaded)
-  end
+  def xonly_pubkey(_seckey), do: exit(:nif_not_loaded)
 
   # internal NIF related
 
