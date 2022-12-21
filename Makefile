@@ -1,6 +1,6 @@
 # C library source
 LIB_URL = https://github.com/bitcoin-core/secp256k1
-COMMIT_HASH = 694ce8fb2d1fd8a3d641d7c33705691d41a2a860
+COMMIT_HASH = v0.2.0
 
 # directories
 TARGET_DIR := ./priv
@@ -17,7 +17,7 @@ CFLAGS += -fPIC -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes
 # LD
 LDFLAGS += -lgmp
 
-CONFIG_OPTS = --enable-module-ecdh --enable-module-extrakeys --enable-module-schnorrsig --disable-benchmark --disable-tests --disable-fast-install --with-pic
+CONFIG_OPTS = --disable-benchmark --disable-tests --disable-fast-install --with-pic
 
 # utils
 UTILS = $(SRC_DIR)/random.h $(SRC_DIR)/utils.h
@@ -46,8 +46,7 @@ $(LIB_SRC_DIR)/configure: $(LIB_SRC_DIR)/autogen.sh
 
 $(LIB_SRC_DIR)/autogen.sh:
 	rm -rf $(LIB_SRC_DIR)
-	git clone $(LIB_URL) $(LIB_SRC_DIR)
-	cd $(LIB_SRC_DIR) && git checkout $(COMMIT_HASH)
+	git clone --depth 1 --branch $(COMMIT_HASH) $(LIB_URL) $(LIB_SRC_DIR)
 
 # cleaning
 

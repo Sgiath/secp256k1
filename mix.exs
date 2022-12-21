@@ -16,7 +16,7 @@ defmodule Secp256k1.MixProject do
       # Docs
       name: "secp256k1",
       source_url: "https://git.sr.ht/~sgiath/secp256k1",
-      homepage_url: "https://git.sr.ht/~sgiath/secp256k1",
+      homepage_url: "https://secp256k1.sgiath.dev",
       description: """
       Library wrapping around secp256k1 Bitcoin library
       """,
@@ -36,8 +36,8 @@ defmodule Secp256k1.MixProject do
 
   defp deps do
     [
-      {:elixir_make, "~> 0.6", runtime: false},
-      {:ex_doc, "~> 0.28", only: [:dev, :test], runtime: false},
+      {:elixir_make, "~> 0.7", runtime: false},
+      {:ex_doc, "~> 0.29", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 1.1", only: :dev, runtime: false}
     ]
@@ -63,9 +63,7 @@ defmodule Secp256k1.MixProject do
 
   defp docs do
     [
-      authors: [
-        "sgiath <secp256k1@sgiath.dev>"
-      ],
+      authors: ["sgiath <secp256k1@sgiath.dev>"],
       main: "readme",
       extras: ["README.md": [filename: "readme", title: "Overview"]],
       formatters: ["html"],

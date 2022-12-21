@@ -9,7 +9,7 @@ static int
 load(ErlNifEnv *env, void **priv, ERL_NIF_TERM load_info)
 {
   unsigned char randomize[32];
-  ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY);
+  ctx = secp256k1_context_create(SECP256K1_CONTEXT_NONE);
   fill_random(randomize, sizeof(randomize));
   secp256k1_context_randomize(ctx, randomize);
   return 0;
