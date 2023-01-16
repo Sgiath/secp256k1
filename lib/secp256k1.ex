@@ -1,5 +1,5 @@
 defmodule Secp256k1 do
-  @moduledoc ~S"""
+  @moduledoc """
   This is unified API for all secp256k1 functions this library provides
 
   ## Examples
@@ -54,16 +54,6 @@ defmodule Secp256k1 do
   import Secp256k1.Guards
 
   require Logger
-
-  @dialyzer {:no_return,
-             pubkey: 2,
-             schnorr_sign: 2,
-             schnorr_valid?: 3,
-             ecdh: 2,
-             keypair: 1,
-             keypair: 2,
-             ecdsa_sign: 2,
-             ecdsa_valid?: 3}
 
   @typedoc """
   Hash is 32 bytes long binary
@@ -169,7 +159,7 @@ defmodule Secp256k1 do
     - `seckey` 32 byte long binary
 
   Output
-    - `signature` ECDSA signature serialized in commpressed format (64 byte binary)
+    - `signature` ECDSA signature serialized in compressed format (64 byte binary)
   """
   @spec ecdsa_sign(msg_hash :: hash(), seckey :: seckey()) :: ecdsa_sig()
   defdelegate ecdsa_sign(msg_hash, seckey), to: Secp256k1.ECDSA, as: :sign
@@ -222,7 +212,7 @@ defmodule Secp256k1 do
 
   It accepts pubkey only in compressed or uncompressed format (not xonly format). If you need to
   compute ECDH from xonly pubkey you can prepend it with 0x02 or 0x03 byte but keep in mind that
-  this needs to be consistent thour your app (e.g. if you need interoperability with other apps
+  this needs to be consistent through your app (e.g. if you need interoperability with other apps
   that generate ECDH from full pubkey you don't want to do that):
 
       ecdh(seckey, <<0x02, xonly_pubkey::binary>>)

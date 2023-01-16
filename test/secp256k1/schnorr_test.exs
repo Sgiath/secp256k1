@@ -15,7 +15,7 @@ defmodule Secp256k1Test.Schnorr do
      }}
   end
 
-  test "sucessful", %{seckey: s, pubkey: p, message: msg, message_hash: msg_hash} do
+  test "successful", %{seckey: s, pubkey: p, message: msg, message_hash: msg_hash} do
     # custom length
     sig = Schnorr.sign(msg, s)
 

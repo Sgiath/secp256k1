@@ -17,7 +17,7 @@ defmodule Secp256k1Test.ECDH do
      }}
   end
 
-  test "succesful", %{key1: {s1, p1}, key2: {s2, p2}} do
+  test "successful", %{key1: {s1, p1}, key2: {s2, p2}} do
     assert ECDH.ecdh(s1, p2) == ECDH.ecdh(s2, p1)
   end
 end

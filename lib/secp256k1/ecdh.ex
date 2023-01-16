@@ -3,7 +3,7 @@ defmodule Secp256k1.ECDH do
 
   @spec ecdh(seckey :: Secp256k1.seckey(), pubkey :: Secp256k1.pubkey()) ::
           Secp256k1.shared_secret()
-  def ecdh(_seckey, _pubkey), do: exit(:nif_not_loaded)
+  def ecdh(_seckey, _pubkey), do: :erlang.nif_error(:nif_not_loaded)
 
   # internal NIF related
 

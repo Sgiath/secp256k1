@@ -19,7 +19,7 @@ defmodule Secp256k1.Schnorr do
           seckey :: Secp256k1.seckey(),
           aux :: <<_::32, _::_*8>>
         ) :: Secp256k1.schnorr_sig()
-  def sign32(_msg_hash, _seckey, _aux), do: exit(:nif_not_loaded)
+  def sign32(_msg_hash, _seckey, _aux), do: :erlang.nif_error(:nif_not_loaded)
 
   @spec sign_custom(message :: binary(), seckey :: Secp256k1.seckey()) :: Secp256k1.schnorr_sig()
   def sign_custom(message, seckey) when is_seckey(seckey) do
@@ -28,20 +28,18 @@ defmodule Secp256k1.Schnorr do
 
   @spec sign_custom(message :: binary(), seckey :: Secp256k1.seckey(), aux :: <<_::32, _::_*8>>) ::
           Secp256k1.schnorr_sig()
-  def sign_custom(_message, _seckey, _aux), do: exit(:nif_not_loaded)
+  def sign_custom(_message, _seckey, _aux), do: :erlang.nif_error(:nif_not_loaded)
 
   @spec valid?(
           signature :: Secp256k1.schnorr_sig(),
           message :: binary(),
           pubkey :: Secp256k1.xonly_pubkey()
         ) :: boolean()
-  def valid?(_signature, _message, _pubkey), do: exit(:nif_not_loaded)
+  def valid?(_signature, _message, _pubkey), do: :erlang.nif_error(:nif_not_loaded)
 
   # internal NIF related
 
   @on_load :load_nifs
-
-  @dialyzer {:no_return, sign32: 2, sign_custom: 2, sign: 2}
 
   def load_nifs do
     :secp256k1

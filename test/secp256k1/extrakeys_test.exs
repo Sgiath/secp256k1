@@ -13,7 +13,7 @@ defmodule Secp256k1Test.Extrakeys do
      }}
   end
 
-  test "sucessful", %{seckey: s, pubkey: p} do
+  test "successful", %{seckey: s, pubkey: p} do
     assert Extrakeys.xonly_pubkey(s) == p
   end
 end

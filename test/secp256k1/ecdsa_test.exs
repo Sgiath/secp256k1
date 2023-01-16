@@ -17,7 +17,7 @@ defmodule Secp256k1Test.ECDSA do
      }}
   end
 
-  test "sucessful", %{seckey: seckey, pubkey_compressed: pc, pubkey_uncompressed: pu} do
+  test "successful", %{seckey: seckey, pubkey_compressed: pc, pubkey_uncompressed: pu} do
     assert ECDSA.pubkey(seckey) == pc
     assert ECDSA.pubkey(seckey, compress: true) == pc
     assert ECDSA.pubkey(seckey, compress: false) == pu

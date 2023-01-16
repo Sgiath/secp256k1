@@ -1,8 +1,8 @@
-# Secp256k1
+# Secp256k1 library
 
 Elixir bindings for [secp256k1](https://github.com/bitcoin-core/secp256k1) library
 
-Generated documentation can be found at https://secp256k1.sgiath.dev
+Generated documentation can be found at <https://secp256k1.sgiath.dev>
 
 ## Installation
 
@@ -11,12 +11,12 @@ The package can be installed by adding `secp256k1` to your list of dependencies 
 ```elixir
 def deps do
   [
-    {:secp256k1, git: "https://git.sr.ht/~sgiath/secp256k1"}
+    {:secp256k1, github: "Sgiath/secp256k1"}
   ]
 end
 ```
 
-During the compilation the C library is clonned and build from source. If you are having probem
+During the compilation the C library is cloned and build from source. If you are having problem
 compiling the library please refer to the original repository.
 
 The C code wrapping the library is also build during the compilation. I only tested it on Linux
