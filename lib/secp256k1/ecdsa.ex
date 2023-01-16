@@ -28,7 +28,7 @@ defmodule Secp256k1.ECDSA do
   def decompress_pubkey(_pubkey), do: :erlang.nif_error({:error, :not_loaded})
 
   @spec sign(msg_hash :: Secp256k1.hash(), seckey :: Secp256k1.seckey()) ::
-          Secp256k1.compressed_sig()
+          Secp256k1.ecdsa_sig()
   def sign(msg_hash, seckey) when is_hash(msg_hash) and is_seckey(seckey) do
     sign(msg_hash, seckey, :crypto.strong_rand_bytes(32))
   end
@@ -37,11 +37,11 @@ defmodule Secp256k1.ECDSA do
           msg_hash :: Secp256k1.hash(),
           seckey :: Secp256k1.seckey(),
           aux :: <<_::32, _::_*8>>
-        ) :: Secp256k1.compressed_sig()
+        ) :: Secp256k1.ecdsa_sig()
   def sign(_msg_hash, _seckey, _aux), do: :erlang.nif_error({:error, :not_loaded})
 
   @spec valid?(
-          signature :: Secp256k1.compressed_sig(),
+          signature :: Secp256k1.ecdsa_sig(),
           msg_hash :: Secp256k1.hash(),
           pubkey :: Secp256k1.compressed_pubkey()
         ) :: boolean()
