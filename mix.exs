@@ -1,10 +1,12 @@
 defmodule Secp256k1.MixProject do
   use Mix.Project
 
+  @version "0.2.0"
+
   def project do
     [
       app: :secp256k1,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
@@ -69,7 +71,9 @@ defmodule Secp256k1.MixProject do
       authors: ["sgiath <secp256k1@sgiath.dev>"],
       main: "readme",
       extras: ["README.md": [filename: "readme", title: "Overview"]],
-      formatters: ["html"]
+      formatters: ["html"],
+      source_ref: @version,
+      source_url: "https://github.com/Sgiath/secp256k1"
     ]
   end
 end
