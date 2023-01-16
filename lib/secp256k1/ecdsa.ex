@@ -14,18 +14,18 @@ defmodule Secp256k1.ECDSA do
   end
 
   @spec compressed_pubkey(seckey :: Secp256k1.seckey()) :: Secp256k1.compressed_pubkey()
-  def compressed_pubkey(_seckey), do: :erlang.nif_error(:nif_not_loaded)
+  def compressed_pubkey(_seckey), do: :erlang.nif_error({:error, :not_loaded})
 
   @spec uncompressed_pubkey(seckey :: Secp256k1.seckey()) :: Secp256k1.uncompressed_pubkey()
-  def uncompressed_pubkey(_seckey), do: :erlang.nif_error(:nif_not_loaded)
+  def uncompressed_pubkey(_seckey), do: :erlang.nif_error({:error, :not_loaded})
 
   @spec compress_pubkey(pubkey :: Secp256k1.uncompressed_pubkey()) ::
           Secp256k1.compressed_pubkey()
-  def compress_pubkey(_pubkey), do: :erlang.nif_error(:nif_not_loaded)
+  def compress_pubkey(_pubkey), do: :erlang.nif_error({:error, :not_loaded})
 
   @spec decompress_pubkey(pubkey :: Secp256k1.compressed_pubkey()) ::
           Secp256k1.uncompressed_pubkey()
-  def decompress_pubkey(_pubkey), do: :erlang.nif_error(:nif_not_loaded)
+  def decompress_pubkey(_pubkey), do: :erlang.nif_error({:error, :not_loaded})
 
   @spec sign(msg_hash :: Secp256k1.hash(), seckey :: Secp256k1.seckey()) ::
           Secp256k1.compressed_sig()
@@ -38,14 +38,14 @@ defmodule Secp256k1.ECDSA do
           seckey :: Secp256k1.seckey(),
           aux :: <<_::32, _::_*8>>
         ) :: Secp256k1.compressed_sig()
-  def sign(_msg_hash, _seckey, _aux), do: :erlang.nif_error(:nif_not_loaded)
+  def sign(_msg_hash, _seckey, _aux), do: :erlang.nif_error({:error, :not_loaded})
 
   @spec valid?(
           signature :: Secp256k1.compressed_sig(),
           msg_hash :: Secp256k1.hash(),
           pubkey :: Secp256k1.compressed_pubkey()
         ) :: boolean()
-  def valid?(_signature, _msg_hash, _pubkey), do: :erlang.nif_error(:nif_not_loaded)
+  def valid?(_signature, _msg_hash, _pubkey), do: :erlang.nif_error({:error, :not_loaded})
 
   # internal NIF related
 

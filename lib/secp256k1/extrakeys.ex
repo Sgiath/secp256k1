@@ -2,7 +2,7 @@ defmodule Secp256k1.Extrakeys do
   @moduledoc false
 
   @spec xonly_pubkey(Secp256k1.seckey()) :: Secp256k1.xonly_pubkey()
-  def xonly_pubkey(_seckey), do: :erlang.nif_error(:nif_not_loaded)
+  def xonly_pubkey(_seckey), do: :erlang.nif_error({:error, :not_loaded})
 
   # internal NIF related
 
