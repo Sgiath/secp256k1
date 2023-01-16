@@ -58,12 +58,12 @@ defmodule Secp256k1 do
   @typedoc """
   Hash is 32 bytes long binary
   """
-  @type hash() :: <<_::32, _::_*8>>
+  @type hash() :: <<_::256>>
 
   @typedoc """
   EC secp256k1 seckey is 32 bytes long binary
   """
-  @type seckey() :: <<_::32, _::_*8>>
+  @type seckey() :: <<_::256>>
 
   @typedoc """
   Pubkey can be parsed in compressed (33 bytes), uncompressed (65 bytes) or xonly (32 bytes) format
@@ -73,17 +73,17 @@ defmodule Secp256k1 do
   @typedoc """
   X-only pubkey is binary of 32 byte length
   """
-  @type xonly_pubkey() :: <<_::32, _::_*8>>
+  @type xonly_pubkey() :: <<_::256>>
 
   @typedoc """
   Compressed pubkey is binary of 33 byte length
   """
-  @type compressed_pubkey() :: <<_::33, _::_*8>>
+  @type compressed_pubkey() :: <<_::264>>
 
   @typedoc """
   Uncompressed pubkey is binary of 65 byte length
   """
-  @type uncompressed_pubkey() :: <<_::65, _::_*8>>
+  @type uncompressed_pubkey() :: <<_::520>>
 
   @typedoc """
   Pubkey is binary of 32, 33 or 65 byte length
@@ -93,15 +93,15 @@ defmodule Secp256k1 do
   @typedoc """
   Serialized compressed ECDSA signature is 64 bytes long binary
   """
-  @type ecdsa_sig() :: <<_::64, _::_*8>>
+  @type ecdsa_sig() :: <<_::512>>
 
   @typedoc """
   Schnorr signature is 64 bytes long binary
   """
-  @type schnorr_sig() :: <<_::64, _::_*8>>
+  @type schnorr_sig() :: <<_::512>>
 
   @typedoc "ECDH shared secret is 32 bytes long binary"
-  @type shared_secret() :: <<_::32, _::_*8>>
+  @type shared_secret() :: <<_::256>>
 
   @doc """
   Derive pubkey from provided seckey

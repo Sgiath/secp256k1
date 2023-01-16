@@ -36,7 +36,7 @@ defmodule Secp256k1.ECDSA do
   @spec sign(
           msg_hash :: Secp256k1.hash(),
           seckey :: Secp256k1.seckey(),
-          aux :: <<_::32, _::_*8>>
+          aux :: <<_::256>>
         ) :: Secp256k1.ecdsa_sig()
   def sign(_msg_hash, _seckey, _aux), do: :erlang.nif_error({:error, :not_loaded})
 
