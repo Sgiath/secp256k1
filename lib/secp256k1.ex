@@ -206,19 +206,4 @@ defmodule Secp256k1 do
           pubkey :: xonly_pubkey()
         ) :: boolean()
   defdelegate schnorr_valid?(signature, message, pubkey), to: Secp256k1.Schnorr, as: :valid?
-
-  @doc """
-  Calculate an EC Diffie-Hellman secret in constant time
-
-  It accepts pubkey only in compressed or uncompressed format (not xonly format). If you need to
-  compute ECDH from xonly pubkey you can prepend it with 0x02 or 0x03 byte but keep in mind that
-  this needs to be consistent through your app (e.g. if you need interoperability with other apps
-  that generate ECDH from full pubkey you don't want to do that):
-
-      ecdh(seckey, <<0x02, xonly_pubkey::binary>>)
-
-  """
-  @spec ecdh(seckey :: seckey(), pubkey :: compressed_pubkey() | uncompressed_pubkey()) ::
-          shared_secret()
-  defdelegate ecdh(seckey, pubkey), to: Secp256k1.ECDH
 end
