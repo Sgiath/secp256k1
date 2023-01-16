@@ -39,15 +39,6 @@ defmodule Secp256k1 do
       iex> Secp256k1.schnorr_valid?(sig, msg_hash, pubkey)
       true
 
-  ### Calculate Diffie-Hellman secret
-
-      iex> {s1, p1} = Secp256k1.keypair(:compressed)
-      iex> {s2, p2} = Secp256k1.keypair(:compressed)
-      iex> ecdh1 = Secp256k1.ecdh(s1, p2)
-      iex> ecdh2 = Secp256k1.ecdh(s2, p1)
-      iex> ecdh1 == ecdh2
-      true
-
   """
   @moduledoc authors: ["sgiath <secp256k1@sgiath.dev>"]
 
