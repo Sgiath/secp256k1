@@ -42,10 +42,12 @@ defmodule Secp256k1.MixProject do
       {:elixir_make, "~> 0.7", runtime: false},
 
       # Development
-      {:ex_doc, "~> 0.29", only: [:dev, :test], runtime: false},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.2", only: [:dev], runtime: false},
-      {:mix_test_watch, "~> 1.1", only: :dev, runtime: false}
+      {:ex_check, "~> 0.15", only: [:dev], runtime: false},
+      {:credo, "~> 1.7", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.29", only: [:dev], runtime: false},
+      {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
+      {:mix_test_watch, "~> 1.1", only: [:dev], runtime: false}
     ]
   end
 
