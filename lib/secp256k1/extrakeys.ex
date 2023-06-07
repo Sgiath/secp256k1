@@ -9,7 +9,7 @@ defmodule Secp256k1.Extrakeys do
   @on_load :load_nifs
 
   def load_nifs do
-    :secp256k1
+    :lib_secp256k1
     |> Application.app_dir("priv/extrakeys")
     |> String.to_charlist()
     |> :erlang.load_nif(0)
