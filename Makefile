@@ -1,6 +1,6 @@
 # C library source
 LIB_URL = https://github.com/bitcoin-core/secp256k1
-COMMIT_HASH = v0.2.0
+COMMIT_HASH = v0.3.2
 
 # directories
 TARGET_DIR := ./priv
@@ -17,12 +17,13 @@ CFLAGS += -fPIC -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes
 # LD
 LDFLAGS += -lgmp
 
+# secp256k1 library options
 CONFIG_OPTS = --disable-benchmark --disable-tests --disable-fast-install --with-pic
 
 # utils
 UTILS = $(SRC_DIR)/random.h $(SRC_DIR)/utils.h
 
-# default target
+# default target compile everything
 
 .PHONY: all
 all: $(TARGET_DIR)/ecdsa.so $(TARGET_DIR)/ecdh.so $(TARGET_DIR)/extrakeys.so $(TARGET_DIR)/schnorrsig.so

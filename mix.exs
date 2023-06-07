@@ -1,11 +1,11 @@
 defmodule Secp256k1.MixProject do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.3.2"
 
   def project do
     [
-      app: :secp256k1,
+      app: :lib_secp256k1,
       version: @version,
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule Secp256k1.MixProject do
       # Docs
       name: "secp256k1",
       source_url: "https://github.com/Sgiath/secp256k1",
-      homepage_url: "https://secp256k1.sgiath.dev",
+      homepage_url: "https://sgiath.dev/libraries#secp256k1",
       description: """
       Library wrapping around secp256k1 Bitcoin library
       """,
