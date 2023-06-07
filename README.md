@@ -1,8 +1,9 @@
 # Secp256k1 library
 
-Elixir bindings for [secp256k1](https://github.com/bitcoin-core/secp256k1) library
+[![Hex.pm](https://img.shields.io/hexpm/v/lib_secp256k1.svg?style=flat&color=blue)](https://hex.pm/packages/lib_secp256k1)
+[![Docs](https://img.shields.io/badge/api-docs-green.svg?style=flat)](https://hexdocs.pm/lib_secp256k1)
 
-Generated documentation can be found at <https://hexdocs.pm/lib_secp256k1/>
+Elixir bindings for [secp256k1](https://github.com/bitcoin-core/secp256k1) library
 
 ## Installation
 
@@ -11,7 +12,7 @@ The package can be installed by adding `lib_secp256k1` to your list of dependenc
 ```elixir
 def deps do
   [
-    {:lib_secp256k1, "~> 0.3.2"},
+    {:lib_secp256k1, "~> 0.3.3"},
   ]
 end
 ```

@@ -73,10 +73,21 @@ defmodule Secp256k1.MixProject do
     [
       authors: ["sgiath <secp256k1@sgiath.dev>"],
       main: "readme",
-      extras: ["README.md": [filename: "readme", title: "Overview"]],
+      api_reference: false,
+      extras: [
+        "README.md": [filename: "readme", title: "Overview"],
+        "CHANGELOG.md": [filename: "changelog", title: "Changelog"]
+      ],
       formatters: ["html"],
-      source_ref: @version,
-      source_url: "https://github.com/Sgiath/secp256k1"
+      source_ref: "v#{@version}",
+      source_url: "https://github.com/Sgiath/secp256k1",
+      groups_for_modules: groups_for_modules()
+    ]
+  end
+
+  defp groups_for_modules do
+    [
+      "Private API": [Secp256k1.ECDSA, Secp256k1.Extrakeys, Secp256k1.Schnorr]
     ]
   end
 end
