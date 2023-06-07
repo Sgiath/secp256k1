@@ -5,9 +5,15 @@ defmodule Secp256k1.MixProject do
 
   def project do
     [
-      app: :lib_secp256k1,
+      # Library
+      app: :secp256k1,
       version: @version,
+
+      # Elixir
       elixir: "~> 1.14",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      consolidate_protocols: Mix.env() != :test,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
 
@@ -53,19 +59,14 @@ defmodule Secp256k1.MixProject do
 
   defp package do
     [
+      name: "lib_secp256k1",
+      maintainers: ["Sgiath <secp256k1@sgiath.dev>"],
+      files: ~w(lib LICENSE mix.exs README* CHANGELOG* c_src/*.[ch] Makefile),
       licenses: ["WTFPL"],
       links: %{
         "C library" => "https://github.com/bitcoin-core/secp256k1",
         "GitHub" => "https://github.com/Sgiath/secp256k1"
-      },
-      files: [
-        "lib",
-        "LICENSE",
-        "mix.exs",
-        "README.md",
-        "c_src/*.[ch]",
-        "Makefile"
-      ]
+      }
     ]
   end
 
