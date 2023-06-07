@@ -6,7 +6,7 @@ defmodule Secp256k1.MixProject do
   def project do
     [
       # Library
-      app: :secp256k1,
+      app: :lib_secp256k1,
       version: @version,
 
       # Elixir
