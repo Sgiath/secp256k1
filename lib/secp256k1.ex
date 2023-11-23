@@ -160,7 +160,7 @@ defmodule Secp256k1 do
 
   Inputs
     - `signature` 64 byte long binary
-    - `msg_hash` 32 byte long message hash to sign
+    - `msg_hash` 32 byte long message hash that was signed
     - `pubkey` compressed pubkey (33 byte long binary)
   """
   @spec ecdsa_valid?(signature :: ecdsa_sig(), msg_hash :: hash(), pubkey :: compressed_pubkey()) ::
