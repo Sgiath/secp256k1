@@ -1,7 +1,7 @@
 defmodule Secp256k1.MixProject do
   use Mix.Project
 
-  @version "0.4.0"
+  @version "0.4.1"
 
   def project do
     [
@@ -51,7 +51,7 @@ defmodule Secp256k1.MixProject do
       {:ex_check, "~> 0.15", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.30", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.31", only: [:dev], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.1", only: [:dev], runtime: false}
     ]
