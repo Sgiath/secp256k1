@@ -12,7 +12,7 @@ The package can be installed by adding `lib_secp256k1` to your list of dependenc
 ```elixir
 def deps do
   [
-    {:lib_secp256k1, "~> 0.4.1"},
+    {:lib_secp256k1, "~> 0.5.1"},
   ]
 end
 ```

@@ -7,11 +7,11 @@
   };
 
   outputs =
-    { nixpkgs, flake-utils, ... }@inputs:
+    { nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = nixpkgs.legacyPackages.${system};
 
         erlang = pkgs.beam.interpreters.erlang_27;
         beamPkgs = pkgs.beam.packagesWith erlang;
