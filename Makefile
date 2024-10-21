@@ -1,6 +1,6 @@
 # C library source
 LIB_URL = https://github.com/bitcoin-core/secp256k1
-COMMIT_HASH = v0.4.1
+COMMIT_HASH = v0.5.0
 
 # directories
 TARGET_DIR := ./priv
@@ -13,9 +13,6 @@ CFLAGS += -I$(ERTS_INCLUDE_DIR)
 # secp256k1 libraries
 CFLAGS += -I $(LIB_SRC_DIR)/include
 CFLAGS += -fPIC -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes
-
-# LD
-LDFLAGS += -lgmp
 
 # secp256k1 library options
 CONFIG_OPTS = --disable-benchmark --disable-tests --disable-fast-install --with-pic
@@ -31,7 +28,7 @@ all: $(TARGET_DIR)/ecdsa.so $(TARGET_DIR)/ecdh.so $(TARGET_DIR)/extrakeys.so $(T
 # NIFs compilation
 
 $(TARGET_DIR)/%.so: $(SRC_DIR)/%.c $(UTILS) $(LIB_SRC_DIR)/.libs/libsecp256k1.a
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -shared -o $@ $^ $(LDFLAGS)
 
 # secp256k1 library compilation
@@ -46,12 +43,12 @@ $(LIB_SRC_DIR)/configure: $(LIB_SRC_DIR)/autogen.sh
 	cd $(LIB_SRC_DIR) && ./autogen.sh
 
 $(LIB_SRC_DIR)/autogen.sh:
-	rm -rf $(LIB_SRC_DIR)
+	@rm -rf $(LIB_SRC_DIR)
 	git clone --depth 1 --branch $(COMMIT_HASH) $(LIB_URL) $(LIB_SRC_DIR)
 
 # cleaning
 
 .PHONY: clean
 clean:
-	rm -rf $(TARGET_DIR)
-	rm -rf $(LIB_SRC_DIR)
+	@rm -rf $(TARGET_DIR)
+	@rm -rf $(LIB_SRC_DIR)
