@@ -1,29 +1,23 @@
 {
-  description = "secp256k1";
+  description = "secp256k1 lib in Elixir";
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs =
-    { nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-
-        erlang = pkgs.beam.interpreters.erlang_27;
-        beamPkgs = pkgs.beam.packagesWith erlang;
-        elixir = beamPkgs.elixir_1_17;
-      in
-      {
+  outputs = {parts, ...} @ inputs:
+    parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux"];
+      perSystem = {pkgs, ...}: let
+        beamPackages = pkgs.beam_minimal.packages.erlang_27;
+        elixir = beamPackages.elixir_1_17;
+      in {
         devShells.default = pkgs.mkShell {
-          nativeBuildInputs = [ pkgs.autoreconfHook ];
-
-          buildInputs = [
+          packages = with pkgs; [
             elixir
-            pkgs.git
+            git
+            autoreconfHook
           ];
 
           env = {
@@ -31,6 +25,6 @@
             ELIXIR_ERL_OPTIONS = "+sssdio 128";
           };
         };
-      }
-    );
+      };
+    };
 }
