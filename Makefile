@@ -1,6 +1,6 @@
 # C library source
 LIB_URL = https://github.com/bitcoin-core/secp256k1
-COMMIT_HASH = v0.5.1
+COMMIT_HASH = v0.6.0
 
 # directories
 TARGET_DIR := ./priv

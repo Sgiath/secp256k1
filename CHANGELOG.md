@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.0 (2024-11-08)
+
+- Upgrade lib to version v0.6.0
+
 ## v0.5.1 (2024-10-21)
 
 - Upgrade lib to version v0.5.1
