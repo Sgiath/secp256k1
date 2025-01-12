@@ -45,12 +45,12 @@ defmodule Secp256k1.MixProject do
   defp deps do
     [
       # C compilation
-      {:elixir_make, "~> 0.8", runtime: false},
+      {:elixir_make, "~> 0.9", runtime: false},
 
       # Development
       {:ex_check, "~> 0.16", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.34", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.36", only: [:dev], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.2", only: [:dev], runtime: false}
     ]
