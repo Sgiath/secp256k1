@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.1 (2025-03-31)
+
+- Update dependencies
+- Fix LDFLAGS on MacOS
+
 ## v0.6.0 (2024-11-08)
 
 - Upgrade lib to version v0.6.0

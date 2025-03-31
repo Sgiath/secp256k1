@@ -1,7 +1,7 @@
 defmodule Secp256k1.MixProject do
   use Mix.Project
 
-  @version "0.6.0"
+  @version "0.6.1"
 
   def project do
     [
@@ -19,7 +19,7 @@ defmodule Secp256k1.MixProject do
 
       # Elixir make
       compilers: [:elixir_make] ++ Mix.compilers(),
-      make_clean: ["clean"],
+      make_clean: ["distclean"],
 
       # Docs
       name: "secp256k1",
@@ -50,7 +50,7 @@ defmodule Secp256k1.MixProject do
       # Development
       {:ex_check, "~> 0.16", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.36", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.37", only: [:dev], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 1.2", only: [:dev], runtime: false}
     ]

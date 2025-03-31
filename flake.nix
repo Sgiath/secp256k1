@@ -10,7 +10,7 @@
     parts.lib.mkFlake {inherit inputs;} {
       systems = ["x86_64-linux"];
       perSystem = {pkgs, ...}: let
-        beamPackages = pkgs.beam_minimal.packages.erlang_27;
+        beamPackages = pkgs.beam.packages.erlang_27;
         elixir = beamPackages.elixir_1_18;
       in {
         devShells.default = pkgs.mkShell {
