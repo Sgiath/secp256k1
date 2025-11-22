@@ -47,6 +47,7 @@ xonly_pubkey(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert serialized pubkey to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(serialized_pubkey), &result);
   memcpy(finished, serialized_pubkey, sizeof(serialized_pubkey));
+  secure_erase(&keypair, sizeof(keypair));
   return result;
 }
 

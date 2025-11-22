@@ -7,15 +7,29 @@
 
 static secp256k1_context *ctx = NULL;
 
+static void
+secure_erase(void *ptr, size_t len)
+{
+  volatile unsigned char *p = (volatile unsigned char *)ptr;
+  while (len--)
+  {
+    *p++ = 0;
+  }
+}
+
 static int
 load(ErlNifEnv *env, void **priv, ERL_NIF_TERM load_info)
 {
   int return_val;
   unsigned char randomize[32];
   ctx = secp256k1_context_create(SECP256K1_CONTEXT_NONE);
-  fill_random(randomize, sizeof(randomize));
+  if (!fill_random(randomize, sizeof(randomize)))
+  {
+    return -1;
+  }
   return_val = secp256k1_context_randomize(ctx, randomize);
   assert(return_val);
+  secure_erase(randomize, sizeof(randomize));
   return 0;
 }
 
@@ -35,7 +49,13 @@ unload(ErlNifEnv *env, void *priv)
 static ERL_NIF_TERM
 error_result(ErlNifEnv *env, char *error_msg)
 {
-  return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_string(env, error_msg, ERL_NIF_LATIN1));
+  ErlNifBinary bin;
+  size_t len = strlen(error_msg);
+  
+  enif_alloc_binary(len, &bin);
+  memcpy(bin.data, error_msg, len);
+  
+  return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_binary(env, &bin));
 }
 
 /*static ERL_NIF_TERM*/

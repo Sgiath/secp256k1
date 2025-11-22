@@ -4,6 +4,7 @@
 #include <bcrypt.h>
 #elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
 #include <sys/random.h>
+#include <stdio.h>
 #elif defined(__OpenBSD__)
 #include <unistd.h>
 #else
@@ -28,7 +29,18 @@ static int fill_random(unsigned char *data, size_t size)
     ssize_t res = getrandom(data, size, 0);
     if (res < 0 || (size_t)res != size)
     {
-        return 0;
+        FILE *fp = fopen("/dev/urandom", "rb");
+        if (!fp)
+        {
+            return 0;
+        }
+        size_t read_bytes = fread(data, 1, size, fp);
+        fclose(fp);
+        if (read_bytes != size)
+        {
+            return 0;
+        }
+        return 1;
     }
     else
     {

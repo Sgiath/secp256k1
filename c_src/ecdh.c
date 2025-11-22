@@ -42,6 +42,7 @@ ecdh(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
   /* Convert serialized pubkey to Erlang binary */
   finished = enif_make_new_binary(env, sizeof(shared_secret), &result);
   memcpy(finished, shared_secret, sizeof(shared_secret));
+  secure_erase(shared_secret, sizeof(shared_secret));
   return result;
 }
 
