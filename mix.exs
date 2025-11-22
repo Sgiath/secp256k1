@@ -1,7 +1,7 @@
 defmodule Secp256k1.MixProject do
   use Mix.Project
 
-  @version "0.6.1"
+  @version "0.7.0"
 
   def project do
     [
@@ -10,7 +10,7 @@ defmodule Secp256k1.MixProject do
       version: @version,
 
       # Elixir
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       consolidate_protocols: Mix.env() != :test,
@@ -50,9 +50,9 @@ defmodule Secp256k1.MixProject do
       # Development
       {:ex_check, "~> 0.16", only: [:dev], runtime: false},
       {:credo, "~> 1.7", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.37", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.39", only: [:dev], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev], runtime: false},
-      {:mix_test_watch, "~> 1.2", only: [:dev], runtime: false}
+      {:mix_test_watch, "~> 1.4", only: [:dev], runtime: false}
     ]
   end
 
@@ -76,6 +76,8 @@ defmodule Secp256k1.MixProject do
       api_reference: false,
       extras: [
         "README.md": [filename: "readme", title: "Overview"],
+        "docs/usage.md": [filename: "usage", title: "Usage Guide"],
+        "docs/musig.md": [filename: "musig", title: "MuSig Guide"],
         "CHANGELOG.md": [filename: "changelog", title: "Changelog"]
       ],
       formatters: ["html"],
@@ -87,7 +89,7 @@ defmodule Secp256k1.MixProject do
 
   defp groups_for_modules do
     [
-      "Private API": [Secp256k1.ECDSA, Secp256k1.Extrakeys, Secp256k1.Schnorr]
+      "Private API": [Secp256k1.ECDSA, Secp256k1.Extrakeys, Secp256k1.Schnorr, Secp256k1.MuSig]
     ]
   end
 end

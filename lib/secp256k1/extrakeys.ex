@@ -5,6 +5,14 @@ defmodule Secp256k1.Extrakeys do
 
   @doc """
   Derive xonly pubkey from seckey
+
+  ## Examples
+
+      iex> {seckey, _} = Secp256k1.keypair(:compressed)
+      iex> xonly = Secp256k1.Extrakeys.xonly_pubkey(seckey)
+      iex> byte_size(xonly)
+      32
+
   """
   @spec xonly_pubkey(Secp256k1.seckey()) :: Secp256k1.xonly_pubkey()
   def xonly_pubkey(_seckey), do: :erlang.nif_error({:error, :not_loaded})

@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.7.0 (2025-11-22)
+
+- Added experimental support for MuSig2 multi-signatures
+- Improved security by implementing secure erasure of secrets in NIFs
+- Fixed potential RNG failure handling in NIF loading
+- Added comprehensive usage guides for general usage and MuSig2
+- Expanded module documentation with code examples
+- Added system dependency installation instructions
+- Upgrade lib to version v0.7.0
+
 ## v0.6.1 (2025-03-31)
 
 - Update dependencies

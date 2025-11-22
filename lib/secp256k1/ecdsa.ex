@@ -10,6 +10,14 @@ defmodule Secp256k1.ECDSA do
 
   ## Options
     - :compress (default true) - whether to format pubkey in compressed or uncompressed format
+
+  ## Examples
+
+      iex> {seckey, _} = Secp256k1.keypair(:compressed)
+      iex> pubkey = Secp256k1.ECDSA.pubkey(seckey)
+      iex> byte_size(pubkey)
+      33
+
   """
   @spec pubkey(seckey :: Secp256k1.seckey(), opts :: Keyword.t()) ::
           Secp256k1.compressed_pubkey() | Secp256k1.uncompressed_pubkey()
@@ -49,6 +57,15 @@ defmodule Secp256k1.ECDSA do
 
   @doc """
   Generate ECDSA signature of message hash (AUX is randomly generated)
+
+  ## Examples
+
+      iex> {seckey, _} = Secp256k1.keypair(:compressed)
+      iex> msg_hash = :crypto.hash(:sha256, "hello")
+      iex> signature = Secp256k1.ECDSA.sign(msg_hash, seckey)
+      iex> byte_size(signature)
+      64
+
   """
   @spec sign(msg_hash :: Secp256k1.hash(), seckey :: Secp256k1.seckey()) ::
           Secp256k1.ecdsa_sig()
@@ -68,6 +85,15 @@ defmodule Secp256k1.ECDSA do
 
   @doc """
   Check if ECDSA signature is valid
+
+  ## Examples
+
+      iex> {seckey, pubkey} = Secp256k1.keypair(:compressed)
+      iex> msg_hash = :crypto.hash(:sha256, "hello")
+      iex> signature = Secp256k1.ECDSA.sign(msg_hash, seckey)
+      iex> Secp256k1.ECDSA.valid?(signature, msg_hash, pubkey)
+      true
+
   """
   @spec valid?(
           signature :: Secp256k1.ecdsa_sig(),

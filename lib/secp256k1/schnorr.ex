@@ -7,6 +7,25 @@ defmodule Secp256k1.Schnorr do
 
   @doc """
   Generate Schnorr signature of message (can be hash or custom length message)
+
+  ## Examples
+
+  ### Sign a 32-byte hash
+
+      iex> {seckey, _} = Secp256k1.keypair(:xonly)
+      iex> msg_hash = :crypto.hash(:sha256, "hello")
+      iex> signature = Secp256k1.Schnorr.sign(msg_hash, seckey)
+      iex> byte_size(signature)
+      64
+
+  ### Sign an arbitrary message
+
+      iex> {seckey, _} = Secp256k1.keypair(:xonly)
+      iex> message = "This is a long message that is not 32 bytes"
+      iex> signature = Secp256k1.Schnorr.sign(message, seckey)
+      iex> byte_size(signature)
+      64
+
   """
   @spec sign(message :: binary(), seckey :: Secp256k1.seckey()) :: Secp256k1.schnorr_sig()
   def sign(message, seckey) when is_hash(message), do: sign32(message, seckey)
@@ -49,6 +68,15 @@ defmodule Secp256k1.Schnorr do
 
   @doc """
   Validate Schnorr signature
+
+  ## Examples
+
+      iex> {seckey, pubkey} = Secp256k1.keypair(:xonly)
+      iex> msg_hash = :crypto.hash(:sha256, "hello")
+      iex> signature = Secp256k1.Schnorr.sign(msg_hash, seckey)
+      iex> Secp256k1.Schnorr.valid?(signature, msg_hash, pubkey)
+      true
+
   """
   @spec valid?(
           signature :: Secp256k1.schnorr_sig(),
