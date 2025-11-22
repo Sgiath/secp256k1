@@ -40,3 +40,4 @@ brew install make gcc autoconf autobuild
 - [x] generate and validate ECDSA signatures
 - [x] generate and validate Schnorr signatures
 - [x] compute Diffie-Hellman secret
+- [x] Musig protocol functions (experimental)

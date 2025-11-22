@@ -1,6 +1,6 @@
 # C library source
 LIB_URL := https://github.com/bitcoin-core/secp256k1
-COMMIT_HASH := v0.6.0
+COMMIT_HASH := v0.7.0
 
 # --- Tools ---
 CC ?= gcc
@@ -47,7 +47,7 @@ ifeq ($(OS), Darwin)
 endif
 
 # --- secp256k1 Library Options ---
-CONFIG_OPTS = --disable-benchmark --disable-tests --disable-fast-install --with-pic
+CONFIG_OPTS = --disable-benchmark --disable-tests --disable-fast-install --with-pic --enable-experimental --enable-module-musig
 
 # --- Source Files & Targets ---
 NIF_SOURCES = $(wildcard $(SRC_DIR)/*.c)
